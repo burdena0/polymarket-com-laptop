@@ -15,7 +15,7 @@ Follow [the laptop installation and startup guide](docs/LAPTOP.md). After setup,
 - The dashboard shows its mode, heartbeat, paper positions, and decision reasons.
 - The experiment starts with $50 simulated cash and keeps a $40 reserve. The $200 monthly subscription expense is shown separately.
 
-**Paper mode only.** No keys, signing, deposits, or real orders are supported in this release. A live execution release is not complete. Simulated fills are assumptions based on displayed liquidity; they do not demonstrate executable profitability. Closed-market payouts are not automatically applied.
+**Paper trading only.** Optional [local account enrollment](docs/ACCOUNT_SETUP.md) encrypts credentials and verifies account reads; it does not enable real orders. A live execution release is not complete. Simulated fills are assumptions based on displayed liquidity; they do not demonstrate executable profitability. Closed-market payouts are not automatically applied.
 
 Run verification with `python -m unittest discover -s tests -v`.
 

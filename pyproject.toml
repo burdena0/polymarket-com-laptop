@@ -8,6 +8,9 @@ version = "0.1.0"
 requires-python = ">=3.10"
 description = "Local Polymarket.com weather activity observer and paper execution journal"
 
+[project.optional-dependencies]
+accounts = ["py-clob-client-v2==1.1.0"]
+
 [tool.setuptools.packages.find]
 include = ["weather_laptop*"]
 

@@ -1,6 +1,6 @@
 # Laptop setup
 
-This is the Polymarket.com paper application. It contains an activity copier observer, paper copier, and independent NWS probability strategy, sharing the same cash and position journal. It contains no US account code. Live account enrollment is not implemented; do not supply a private key. The independent model only accepts markets whose rules match NWS CLI station/day settlement; markets using other sources will be rejected.
+This is the Polymarket.com paper application. It contains an activity copier observer, paper copier, and independent NWS probability strategy, sharing the same cash and position journal. It contains no US account code. Optional encrypted account enrollment is explained in [ACCOUNT_SETUP.md](ACCOUNT_SETUP.md); real orders remain disabled. The independent model only accepts markets whose rules match NWS CLI station/day settlement; markets using other sources will be rejected.
 
 1. Install Python 3.10 or newer from https://www.python.org/downloads/windows/ and select the option to add Python to PATH. Install Git or download the repository ZIP using GitHub.
 2. Open PowerShell. For a cloned repository in Downloads, run:
@@ -40,4 +40,4 @@ New trades can be skipped for unavailable data, a moved price, insufficient dept
 
 ## Execution integration status
 
-The official international interfaces differ from the US key protocol. The current official SDK also has wallet setup behavior that must be separated from read-only enrollment. No SDK or secret-handling implementation is shipped here yet. The remaining execution work is authentication, independently verified fills and fees, ambiguous-order recovery, holdings reconciliation, and restricted-region checks. Do not treat this paper release as an armed trading bot.
+The official international interfaces differ from the US key protocol. Optional encrypted enrollment uses the pinned compatibility SDK and verifies read-only balances and open orders. Remaining execution work includes independently verified fills and fees, ambiguous-order recovery, holdings reconciliation, and restricted-region checks. Do not treat this paper release as an armed trading bot.
