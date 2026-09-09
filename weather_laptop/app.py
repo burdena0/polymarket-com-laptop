@@ -59,7 +59,7 @@ def cycle(journal, feed, now):
             'coverage': 'Latest 100 activity records; intervening history may be incomplete'}
 
 
-def run(config, root, port, once=False):
+def run(config, root, port, once=False, lan=False):
     root.mkdir(parents=True, exist_ok=True)
     with lock(root / 'process.lock'):
         journal = Journal(root / 'paper.sqlite', config)
@@ -69,8 +69,16 @@ def run(config, root, port, once=False):
         journal.db.execute("UPDATE events SET state='interrupted',reason='Not replayed after restart' WHERE state='observed'")
         state = {'mode': 'paper', 'orders_enabled': False, 'status': 'starting', 'at': None}
         state_lock = threading.Lock()
+        from .remote import password,authorized
+        monitor_password=password() if lan else None
         class Handler(BaseHTTPRequestHandler):
             def do_GET(self):
+                if lan and not authorized(self.headers.get('Authorization'),monitor_password,self.client_address[0]):
+                    self.send_response(401)
+                    self.send_header('WWW-Authenticate','Basic realm="Laptop status", charset="UTF-8"')
+                    self.send_header('Cache-Control','no-store')
+                    self.end_headers()
+                    return
                 if self.path == '/api/status':
                     with state_lock:
                         content = json.dumps(state).encode()
@@ -90,9 +98,10 @@ def run(config, root, port, once=False):
         server = None
         try:
             if not once:
-                server = ThreadingHTTPServer(('127.0.0.1', port), Handler)
+                server = ThreadingHTTPServer(('0.0.0.0' if lan else '127.0.0.1', port), Handler)
                 threading.Thread(target=server.serve_forever, daemon=True).start()
                 print(f'Paper observer and simulator: http://127.0.0.1:{port}/', flush=True)
+                if lan:print('LAN status enabled. User: viewer. Password: data/monitor-password.txt. Use a trusted private network only.',flush=True)
             while not (root / 'STOP').exists():
                 extra = {}
                 error = None
@@ -130,6 +139,7 @@ def main():
     parser.add_argument('--root', type=Path, default=Path('data/paper-v1'))
     parser.add_argument('--port', type=int, default=8090)
     parser.add_argument('--once', action='store_true')
+    parser.add_argument('--lan', action='store_true',help='Authenticated read-only dashboard on a trusted private LAN')
     args = parser.parse_args()
     if args.configure:
         if args.config.exists():
@@ -142,7 +152,7 @@ def main():
     wallet(config['source_wallet'])
     if config != dict(DEFAULTS, source_wallet=config['source_wallet']):
         raise SystemExit('This release uses the documented fixed experiment settings.')
-    run(config, args.root, args.port, args.once)
+    run(config, args.root, args.port, args.once, args.lan)
 
 
 if __name__ == '__main__':

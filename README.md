@@ -6,6 +6,8 @@ A standalone Windows laptop application for public weather-market activity, a lo
 
 Follow [the laptop installation and startup guide](docs/LAPTOP.md). After setup, run `start.cmd` and visit <http://127.0.0.1:8090/>. Run `stop.cmd` to stop this application.
 
+To view the laptop dashboard from another PC on a trusted local network, see [remote status setup](docs/REMOTE_STATUS.md) and use `start-lan.cmd`.
+
 ## Current release
 
 - One process runs the activity observer, simulator, and independent NWS weather model together, sharing one paper cash balance.
